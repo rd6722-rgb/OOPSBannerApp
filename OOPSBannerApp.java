@@ -1,99 +1,74 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class OOPSBannerApp {
-     static class CharacterPatternMap {
-        private final char character;
-        private final String[] pattern;   // 7-line pattern
+    public static Map<Character, String[]> buildPatternMap() {
 
-        /**
-         * Constructor to initialize character and pattern.
-         */
-        public CharacterPatternMap(char character, String[] pattern) {
-            this.character = character;
-            this.pattern = pattern;
-        }
+        Map<Character, String[]> map = new HashMap<>();
 
-        /** Returns the character. */
-        public char getCharacter() {
-            return character;
-        }
+        map.put('O', new String[]{
+                " *** ",
+                "*   *",
+                "*   *",
+                "*   *",
+                " *** "
+        });
 
-        /** Returns the banner pattern. */
-        public String[] getPattern() {
-            return pattern;
-        }
+        map.put('P', new String[]{
+                "**** ",
+                "*   *",
+                "**** ",
+                "*    ",
+                "*    "
+        });
+
+        map.put('S', new String[]{
+                " ****",
+                "*    ",
+                " *** ",
+                "    *",
+                " ***"
+        });
+
+        return map;
     }
+    public static void renderBanner(String text, Map<Character, String[]> map) {
 
-    /**
-     * Utility method to fetch pattern for a given character.
-     */
-    public static String[] getCharacterPattern(char ch, CharacterPatternMap[] maps) {
-        for (CharacterPatternMap map : maps) {
-            if (map.getCharacter() == ch) {
-                return map.getPattern();
+        if (text == null || text.isEmpty()) {
+            System.out.println("No text provided.");
+            return;
+        }
+
+        int rows = map.get(text.charAt(0)).length;
+
+        for (int i = 0; i < rows; i++) {
+
+            StringBuilder line = new StringBuilder();
+
+            for (char c : text.toCharArray()) {
+
+                String[] pattern = map.get(c);
+
+                if (pattern != null) {
+                    line.append(pattern[i]).append(" ");
+                } else {
+                    line.append("???? ").append(" ");
+                }
             }
-        }
-        return new String[]{" ", " ", " ", " ", " ", " ", " "};
-    }
 
-    /**
-     * Utility method to print banner text.
-     */
-    public static void printBanner(String text, CharacterPatternMap[] maps) {
-        StringBuilder[] lines = new StringBuilder[7];
-
-        for (int i = 0; i < 7; i++) {
-            lines[i] = new StringBuilder();
-        }
-
-        for (char ch : text.toCharArray()) {
-            String[] pattern = getCharacterPattern(ch, maps);
-            for (int i = 0; i < 7; i++) {
-                lines[i].append(pattern[i]).append("  ");
-            }
-        }
-
-        for (StringBuilder line : lines) {
             System.out.println(line);
         }
     }
 
-    /**
-     * Main method.
+    /*
+     * Main Method
      */
     public static void main(String[] args) {
 
-        CharacterPatternMap[] maps = {
+        Map<Character, String[]> patterns = buildPatternMap();
 
-            new CharacterPatternMap('O', new String[]{
-                " ***** ",
-                "*     *",
-                "*     *",
-                "*     *",
-                "*     *",
-                "*     *",
-                " ***** "
-            }),
+        String word = "OOPS";
 
-            new CharacterPatternMap('P', new String[]{
-                "****** ",
-                "*     *",
-                "*     *",
-                "****** ",
-                "*      ",
-                "*      ",
-                "*      "
-            }),
-
-            new CharacterPatternMap('S', new String[]{
-                " ***** ",
-                "*     *",
-                "*      ",
-                " ***** ",
-                "      *",
-                "*     *",
-                " ***** "
-            })
-        };
-
-        printBanner("OOPS", maps);
+        renderBanner(word, patterns);
     }
 }
